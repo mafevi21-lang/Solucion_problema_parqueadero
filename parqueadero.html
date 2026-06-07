@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratorio Final - Sistema de Parqueaderos | Simulación</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        h1 {
+            color: #1a1a2e;
+            font-size: 2.8em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .subtitle {
+            color: #0f3460;
+            font-size: 1.4em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .lab-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 12px 35px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+        }
+
+        .deadline-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1em;
+            margin-top: 10px;
+        }
+
+        .section {
+            background: white;
+            padding: 35px;
+            margin-bottom: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            animation: fadeIn 0.6s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h2 {
+            color: #1a1a2e;
+            font-size: 2.2em;
+            margin-bottom: 20px;
+            border-left: 6px solid #0f3460;
+            padding-left: 15px;
+        }
+
+        h3 {
+            color: #0f3460;
+            font-size: 1.6em;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        h4 {
+            color: #1a1a2e;
+            font-size: 1.3em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .context-box {
+            background: linear-gradient(135deg, #e8f4f8 0%, #d4e9f2 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 25px 0;
+            border: 3px solid #3498db;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.2);
+        }
+
+        .context-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #1a1a2e;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .objectives {
+            background: linear-gradient(135deg, #1a1a2e15 0%, #0f346015 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border: 2px solid #0f3460;
+        }
+
+        .objectives ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .objectives li {
+            padding: 12px 0;
+            padding-left: 35px;
+            position: relative;
+            font-size: 1.1em;
+        }
+
+        .objectives li:before {
+            content: "🎯";
+            position: absolute;
+            left: 0;
+            font-size: 1.3em;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .warning-box {
+            background: #fff3e0;
+            border-left: 5px solid #ff9800;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .success-box {
+            background: #e8f5e9;
+            border-left: 5px solid #4caf50;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .danger-box {
+            background: #ffebee;
+            border-left: 5px solid #f44336;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .data-table {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 25px 0;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+            color: white;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        tr:hover {
+            background: #f5f5f5;
+        }
+
+        tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 25px 0;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border-top: 4px solid #0f3460;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .card-icon {
+            font-size: 3.5em;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .card-title {
+            color: #1a1a2e;
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .card-content {
+            text-align: left;
+            font-size: 1.05em;
+        }
+
+        .task-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .task-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        .task-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            opacity: 0.8;
+        }
+
+        .task-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .task-description {
+            font-size: 1.05em;
+            opacity: 0.95;
+            line-height: 1.7;
+        }
+
+        .task-points {
+            display: inline-block;
+            background: rgba(255,255,255,0.3);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .formula-box {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.15em;
+            overflow-x: auto;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+
+        .formula-title {
+            color: #4fc3f7;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .step-box {
+            background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #00acc1;
+        }
+
+        .step-number {
+            display: inline-block;
+            background: #00acc1;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 35px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .methodology-section {
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 25px 0;
+            border: 2px solid #1a1a2e;
+        }
+
+        .visual-diagram {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 25px 0;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .rubric-table th {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+
+        .deliverable-box {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border: 3px solid #f39c12;
+        }
+
+        .deliverable-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #1a1a2e;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .code-example {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 30px 0;
+        }
+
+        .timeline-item {
+            padding: 25px;
+            background: white;
+            border-radius: 12px;
+            margin: 25px 0;
+            margin-left: 50px;
+            border-left: 5px solid #1a1a2e;
+            position: relative;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+
+        .timeline-item:before {
+            content: "●";
+            position: absolute;
+            left: -35px;
+            top: 25px;
+            font-size: 2.5em;
+            color: #1a1a2e;
+        }
+
+        .interactive-demo {
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+            padding: 35px;
+            border-radius: 15px;
+            margin: 25px 0;
+            color: white;
+        }
+
+        .btn {
+            background: white;
+            color: #1a1a2e;
+            padding: 15px 35px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px 5px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        .user-type-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 10px 0;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            border-left: 5px solid;
+        }
+
+        .user-rapid { border-left-color: #27ae60; }
+        .user-normal { border-left-color: #3498db; }
+        .user-slow { border-left-color: #f39c12; }
+        .user-very-slow { border-left-color: #e74c3c; }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline-item {
+                margin-left: 30px;
+            }
+        }
+
+        .percentage-badge {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-left: 10px;
+        }
+
+        .mm1-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .example-box {
+            background: #f3e5f5;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border-left: 5px solid #9c27b0;
+        }
+
+        .example-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #9c27b0;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div style="font-size: 4em; margin-bottom: 20px;">🚗</div>
+            <h1>Solución de un Problema de Parqueaderos</h1>
+            <p class="subtitle">Sistema de Pago - Centro Comercial Supercentro</p>
+            <div class="lab-badge">🔬 LABORATORIO FINAL - Actividad Didáctica 2</div>
+            <div class="deadline-badge">📅 Fecha de Entrega: 7 de Diciembre, 23:59</div>
+            <div style="margin-top: 15px; font-size: 1.2em; color: #e74c3c; font-weight: bold;">
+                ⭐ Valor: 100 puntos | 1 Intento Permitido
+            </div>
+        </header>
+
+        <!-- Contexto del Problema -->
+        <div class="section">
+            <h2>📋 Contexto del Problema</h2>
+
+            <div class="context-box">
+                <div class="context-title">
+                    <span>🏢</span>
+                    <span>Centro Comercial Supercentro</span>
+                </div>
+                <p style="font-size: 1.15em; line-height: 1.8;">
+                    El <strong>Centro Comercial Supercentro</strong> cuenta con un sistema de pago de parqueaderos 
+                    automatizado mediante cajeros. Los usuarios deben digitar la placa de su vehículo, seleccionarlo 
+                    y proceder al pago. Actualmente, cada punto de salida cuenta con <span class="highlight">tres cajeros</span> 
+                    con filas independientes, sin cambio de fila ni deserción.
+                </p>
+            </div>
+
+            <h3>🎯 Objetivo del Estudio</h3>
+            <div class="objectives">
+                <ul>
+                    <li>Determinar si tres cajeros por salida son suficientes para la demanda actual</li>
+                    <li>Analizar el comportamiento de diferentes tipos de usuarios</li>
+                    <li>Identificar cuellos de botella en el sistema</li>
+                    <li>Proponer estrategias de mejora basadas en análisis estadístico</li>
+                    <li>Aplicar técnicas de verificación, calibración y validación</li>
+                    <li>Determinar el estado estable del sistema mediante análisis gráfico</li>
+                </ul>
+            </div>
+
+            <h3>⚙️ Características del Sistema</h3>
+            <div class="grid-container">
+                <div class="card">
+                    <div class="card-icon">🎰</div>
+                    <div class="card-title">Cajeros</div>
+                    <div class="card-content">
+                        <ul>
+                            <li><strong>Cantidad:</strong> 3 por salida</li>
+                            <li><strong>Modelo:</strong> M/M/1 independientes</li>
+                            <li><strong>Velocidad:</strong> Igual para todos</li>
+                            <li><strong>Atención:</strong> Inmediata por evento</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">👥</div>
+                    <div class="card-title">Usuarios</div>
+                    <div class="card-content">
+                        <ul>
+                            <li><strong>Tipos:</strong> 4 categorías</li>
+                            <li><strong>Comportamiento:</strong> Variable</li>
+                            <li><strong>Filas:</strong> Independientes</li>
+                            <li><strong>Deserción:</strong> No permitida</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">📊</div>
+                    <div class="card-title">Análisis</div>
+                    <div class="card-content">
+                        <ul>
+                            <li><strong>Método:</strong> Simulación M/M/1</li>
+                            <li><strong>Réplicas:</strong> Por estado estable</li>
+                            <li><strong>Métricas:</strong> Tiempos y promedios</li>
+                            <li><strong>Validación:</strong> Requerida</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Datos del Sistema -->
+        <div class="section">
+            <h2>📊 Datos del Sistema</h2>
+
+            <h3>👤 Tipos de Usuarios y Parámetros</h3>
+            <div class="data-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tipo de Usuario</th>
+                            <th>Tiempo de Servicio (μ)</th>
+                            <th>Tiempo entre Llegadas (λ)</th>
+                            <th>Distribución</th>
+                            <th>Porcentaje</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="user-rapid">
+                            <td><strong>🟢 Rápido</strong></td>
+                            <td>1 minuto</td>
+                            <td>3 minutos</td>
+                            <td>Exponencial</td>
+                            <td><strong>25%</strong></td>
+                        </tr>
+                        <tr class="user-normal">
+                            <td><strong>🔵 Normal</strong></td>
+                            <td>3 minutos</td>
+                            <td>3 minutos</td>
+                            <td>Exponencial</td>
+                            <td><strong>20%</strong></td>
+                        </tr>
+                        <tr class="user-slow">
+                            <td><strong>🟠 Lento</strong></td>
+                            <td>4 minutos</td>
+                            <td>5 minutos</td>
+                            <td>Exponencial</td>
+                            <td><strong>27.5%</strong></td>
+                        </tr>
+                        <tr class="user-very-slow">
+                            <td><strong>🔴 Muy Lento</strong></td>
+                            <td>6 minutos</td>
+                            <td>7 minutos</td>
+                            <td>Exponencial</td>
+                            <td><strong>27.5%</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="info-box">
+                <strong>📝 Nota sobre Distribuciones:</strong>
+                <p style="margin-top: 10px; font-size: 1.1em;">
+                    Los tiempos de servicio y llegadas siguen <strong>distribuciones exponenciales</strong>, 
+                    lo que justifica el uso del modelo <strong>M/M/1</strong> (Markoviano/Markoviano/1 servidor) 
+                    para cada cajero independiente.
+                </p>
+            </div>
+
+            <h3>🔢 Cálculo de Tasas (λ y μ)</h3>
+            <div class="formula-box">
+<span class="formula-title">Conversión de Tiempos a Tasas</span>
+
+Para distribuciones exponenciales:
+λ = 1 / (Tiempo entre llegadas)    [clientes/minuto]
+μ = 1 / (Tiempo de servicio)       [clientes/minuto]
+
+Cálculos para cada tipo de usuario:
+
+🟢 RÁPIDO:
+   λ = 1/3 = 0.333 clientes/min
+   μ = 1/1 = 1.000 clientes/min
+   ρ = λ/μ = 0.333 (Sistema estable ✓)
+
+🔵 NORMAL:
+   λ = 1/3 = 0.333 clientes/min
+   μ = 1/3 = 0.333 clientes/min
+   ρ = λ/μ = 1.000 (Sistema crítico ⚠️)
+
+🟠 LENTO:
+   λ = 1/5 = 0.200 clientes/min
+   μ = 1/4 = 0.250 clientes/min
+   ρ = λ/μ = 0.800 (Sistema estable ✓)
+
+🔴 MUY LENTO:
+   λ = 1/7 = 0.143 clientes/min
+   μ = 1/6 = 0.167 clientes/min
+   ρ = λ/μ = 0.857 (Sistema estable ✓)
+
+Nota: ρ (rho) es el factor de utilización. Si ρ ≥ 1, el sistema es inestable.
+            </div>
+
+            <div class="warning-box">
+                <strong>⚠️ Observación Crítica:</strong>
+                <p style="margin-top: 10px; font-size: 1.1em;">
+                    Los usuarios <strong>NORMALES</strong> tienen un factor de utilización ρ = 1.0, lo que indica 
+                    que el sistema está en el <span class="highlight">límite de estabilidad</span>. Esto puede 
+                    generar colas infinitas en teoría. Los usuarios <strong>LENTOS y MUY LENTOS</strong> representan 
+                    el 55% del total, lo que puede generar congestión significativa.
+                </p>
+            </div>
+
+            <h3>📈 Distribución de Usuarios</h3>
+            <div class="visual-diagram">
+                <div style="display: flex; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap; margin: 20px 0;">
+                    <div style="text-align: center;">
+                        <div style="width: 150px; height: 150px; border-radius: 50%; background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 2em; font-weight: bold; box-shadow: 0 4px 15px rgba(39, 174, 96, 0.4);">
+                            25%
+                        </div>
+                        <div style="margin-top: 10px; font-weight: bold; color: #27ae60;">Rápidos</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="width: 150px; height: 150px; border-radius: 50%; background: linear-gradient(135deg, #3498db 0%, #5dade2 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 2em; font-weight: bold; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);">
+                            20%
+                        </div>
+                        <div style="margin-top: 10px; font-weight: bold; color: #3498db;">Normales</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="width: 150px; height: 150px; border-radius: 50%; background: linear-gradient(135deg, #f39c12 0%, #f1c40f 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 2em; font-weight: bold; box-shadow: 0 4px 15px rgba(243, 156, 18, 0.4);">
+                            27.5%
+                        </div>
+                        <div style="margin-top: 10px; font-weight: bold; color: #f39c12;">Lentos</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="width: 150px; height: 150px; border-radius: 50%; background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 2em; font-weight: bold; box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);">
+                            27.5%
+                        </div>
+                        <div style="margin-top: 10px; font-weight: bold; color: #e74c3c;">Muy Lentos</div>
+                    </div>
+                </div>
+                <p style="margin-top: 20px; font-size: 1.1em; color: #666;">
+                    <strong>Total:</strong> 55% de usuarios son lentos o muy lentos
+                </p>
+            </div>
+        </div>
+
+        <!-- Fundamentos Teóricos -->
+        <div class="section">
+            <h2>📚 Fundamentos Teóricos: Modelo M/M/1</h2>
+
+            <div class="mm1-box">
+                <h3 style="color: white; margin-top: 0;">🎓 ¿Qué es el Modelo M/M/1?</h3>
+                <p style="font-size: 1.15em; line-height: 1.8; margin-bottom: 20px;">
+                    El modelo <strong>M/M/1</strong> es un sistema de colas con las siguientes características:
+                </p>
+                <ul style="font-size: 1.1em; line-height: 1.8;">
+                    <li><strong>M</strong> (primera): Llegadas siguen un proceso de Poisson (tiempos exponenciales)</li>
+                    <li><strong>M</strong> (segunda): Tiempos de servicio siguen distribución exponencial</li>
+                    <li><strong>1</strong>: Un solo servidor</li>
+                    <li><strong>Disciplina:</strong> FIFO (First In, First Out)</li>
+                    <li><strong>Capacidad:</strong> Infinita (sin límite de cola)</li>
+                </ul>
+            </div>
+
+            <h3>📐 Fórmulas Clave del Modelo M/M/1</h3>
+            <div class="formula-box">
+<span class="formula-title">Métricas de Desempeño M/M/1</span>
+
+Parámetros básicos:
+λ = Tasa de llegadas (clientes/unidad de tiempo)
+μ = Tasa de servicio (clientes/unidad de tiempo)
+ρ = λ/μ = Factor de utilización (debe ser < 1 para estabilidad)
+
+Métricas principales:
+
+1. Número promedio de clientes en el sistema (L):
+   L = ρ / (1 - ρ) = λ / (μ - λ)
+
+2. Número promedio de clientes en la cola (Lq):
+   Lq = ρ² / (1 - ρ) = λ² / (μ(μ - λ))
+
+3. Tiempo promedio en el sistema (W):
+   W = 1 / (μ - λ)
+
+4. Tiempo promedio en la cola (Wq):
+   Wq = ρ / (μ - λ) = λ / (μ(μ - λ))
+
+5. Probabilidad de que el sistema esté vacío (P₀):
+   P₀ = 1 - ρ
+
+6. Probabilidad de n clientes en el sistema (Pn):
+   Pn = (1 - ρ) × ρⁿ
+
+Fórmulas de Little:
+L = λ × W
+Lq = λ × Wq
+            </div>
+
+            <h3>🎯 Ejemplo de Cálculo: Usuario Rápido</h3>
+            <div class="example-box">
+                <div class="example-title">📊 Cálculo Teórico para Usuario Rápido</div>
+                <div class="formula-box">
+<span class="formula-title">Datos:</span>
+λ = 1/3 = 0.333 clientes/min
+μ = 1/1 = 1.000 clientes/min
+ρ = 0.333/1.000 = 0.333
+
+<span class="formula-title">Cálculos:</span>
+
+L = 0.333 / (1 - 0.333) = 0.333 / 0.667 = 0.50 clientes
+
+Lq = 0.333² / (1 - 0.333) = 0.111 / 0.667 = 0.17 clientes
+
+W = 1 / (1.000 - 0.333) = 1 / 0.667 = 1.50 minutos
+
+Wq = 0.333 / (1.000 - 0.333) = 0.333 / 0.667 = 0.50 minutos
+
+P₀ = 1 - 0.333 = 0.667 (66.7% del tiempo el cajero está vacío)
+
+<span class="formula-title">Interpretación:</span>
+- En promedio hay 0.5 clientes en el sistema
+- El tiempo promedio total es 1.5 minutos
+- El cajero está ocupado solo el 33.3% del tiempo
+- Sistema muy eficiente para usuarios rápidos ✓
+                </div>
+            </div>
+
+            <div class="success-box">
+                <strong>✅ Ventajas del Modelo M/M/1:</strong>
+                <ul>
+                    <li>✓ Fórmulas analíticas exactas disponibles</li>
+                    <li>✓ Fácil de implementar en simulación</li>
+                    <li>✓ Permite validación teórica vs simulación</li>
+                    <li>✓ Ampliamente estudiado y documentado</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Puntos a Resolver -->
+        <div class="section">
+            <h2>✅ Puntos a Resolver</h2>
+
+            <div class="task-card">
+                <div class="task-number">Punto 1</div>
+                <div class="task-title">📊 Análisis Estadístico de Cajeros</div>
+                <div class="task-description">
+                    <strong>Objetivo:</strong> Calcular las estadísticas necesarias para identificar el cajero con 
+                    <span class="highlight">menor y mayor tiempo promedio de atención</span>.
+                    <br><br>
+                    <strong>Requisitos:</strong>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li>Ejecutar múltiples réplicas (determinadas por estado estable)</li>
+                        <li>Registrar tiempos de atención por cajero</li>
+                        <li>Calcular media, desviación estándar, mínimo y máximo</li>
+                        <li>Identificar cajero más eficiente y menos eficiente</li>
+                        <li>Construir intervalos de confianza (95%)</li>
+                    </ul>
+                </div>
+                <div class="task-points">⭐ 20 puntos</div>
+            </div>
+
+            <div class="task-card">
+                <div class="task-number">Punto 2</div>
+                <div class="task-title">👥 Promedio de Usuarios por Tipo</div>
+                <div class="task-description">
+                    <strong>Objetivo:</strong> Calcular el <span class="highlight">promedio de usuarios de cada tipo</span> 
+                    en la totalidad de cajeros.
+                    <br><br>
+                    <strong>Requisitos:</strong>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li>Contabilizar usuarios por tipo (Rápido, Normal, Lento, Muy Lento)</li>
+                        <li>Calcular promedios agregados de los 3 cajeros</li>
+                        <li>Verificar que las proporciones coincidan con lo esperado (25%, 20%, 27.5%, 27.5%)</li>
+                        <li>Analizar tiempos promedio por tipo de usuario</li>
+                        <li>Presentar resultados en tablas y gráficos</li>
+                    </ul>
+                </div>
+                <div class="task-points">⭐ 20 puntos</div>
+            </div>
+
+            <div class="task-card">
+                <div class="task-number">Punto 3</div>
+                <div class="task-title">💡 Estrategia de Mejora</div>
+                <div class="task-description">
+                    <strong>Objetivo:</strong> Definir una <span class="highlight">estrategia para mejorar</span> la situación 
+                    actual o justificar si tres cajeros son suficientes.
+                    <br><br>
+                    <strong>Requisitos:</strong>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li>Establecer un criterio de decisión claro (ej: tiempo de espera máximo aceptable)</li>
+                        <li>Analizar métricas clave: utilización, tiempos de espera, longitud de cola</li>
+                        <li>Proponer alternativas: agregar cajeros, cajeros especializados, etc.</li>
+                        <li>Simular escenarios alternativos</li>
+                        <li>Justificar la decisión con datos estadísticos</li>
+                    </ul>
+                </div>
+                <div class="task-points">⭐ 20 puntos</div>
+            </div>
+
+            <div class="task-card">
+                <div class="task-number">Punto 4</div>
+                <div class="task-title">🔍 Verificación, Calibración y Validación</div>
+                <div class="task-description">
+                    <strong>Objetivo:</strong> Explicar los procesos de <span class="highlight">verificación, calibración y validación</span> 
+                    del modelo y realizar una gráfica del proceso.
+                    <br><br>
+                    <strong>Requisitos:</strong>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li><strong>Verificación:</strong> Comprobar que el código funciona correctamente</li>
+                        <li><strong>Calibración:</strong> Ajustar parámetros para que coincidan con datos reales</li>
+                        <li><strong>Validación:</strong> Comparar resultados con teoría M/M/1 o datos empíricos</li>
+                        <li>Crear diagrama de flujo del proceso V&V</li>
+                        <li>Documentar pruebas realizadas</li>
+                    </ul>
+                </div>
+                <div class="task-points">⭐ 15 puntos</div>
+            </div>
+
+            <div class="task-card">
+                <div class="task-number">Punto 5</div>
+                <div class="task-title">📈 Eliminación del Estado Transitorio</div>
+                <div class="task-description">
+                    <strong>Objetivo:</strong> Elaborar un algoritmo que <span class="highlight">elimine el estado transitorio</span> 
+                    y graficar los valores promedio mostrando un antes y después.
+                    <br><br>
+                    <strong>Requisitos:</strong>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li>Identificar el período de calentamiento (warm-up period)</li>
+                        <li>Usar técnica del promedio móvil o método gráfico</li>
+                        <li>Determinar punto de corte del transitorio</li>
+                        <li>Graficar: valores con transitorio vs sin transitorio</li>
+                        <li>Recalcular estadísticas solo con datos del estado estable</li>
+                        <li>Usar Matplotlib para visualizaciones</li>
+                    </ul>
+                </div>
+                <div class="task-points">⭐ 15 puntos</div>
+            </div>
+
+            <div class="task-card" style="background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);">
+                <div class="task-number">📝</div>
+                <div class="task-title">Puntualidad y Formato</div>
+                <div class="task-description">
+                    <strong>Objetivo:</strong> Entregar puntualmente y en el formato indicado.
+                    <br><br>
+                    <strong>Requisitos:</strong>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li>Entrega antes del 7 de diciembre a las 23:59</li>
+                        <li>Formato: Apellido_Nombre_problemaParqueadero.doc</li>
+                        <li>Estructura: Introducción, Metodología, Resultados, Conclusiones</li>
+                        <li>Incluir código Python comentado</li>
+                        <li>Gráficos con Matplotlib</li>
+                    </ul>
+                </div>
+                <div class="task-points">⭐ 10 puntos</div>
+            </div>
+        </div>
+
+        <!-- Metodología Propuesta -->
+        <div class="section">
+            <h2>🔬 Metodología Propuesta</h2>
+
+            <div class="methodology-section">
+                <h3 style="margin-top: 0;">📋 Estructura del Documento</h3>
+                <p style="font-size: 1.1em; line-height: 1.8; margin-bottom: 20px;">
+                    El documento debe seguir la siguiente estructura académica:
+                </p>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h4>1. Introducción</h4>
+                    <ul>
+                        <li>Contexto del problema del centro comercial</li>
+                        <li>Justificación del estudio</li>
+                        <li>Objetivos generales y específicos</li>
+                        <li>Alcance del análisis</li>
+                    </ul>
+                </div>
+
+                <div class="timeline-item">
+                    <h4>2. Metodología</h4>
+                    <ul>
+                        <li><strong>2.1 Modelo de Simulación:</strong> Descripción del modelo M/M/1</li>
+                        <li><strong>2.2 Parámetros del Sistema:</strong> Tabla de tipos de usuarios</li>
+                        <li><strong>2.3 Herramientas:</strong> Python, NumPy, Matplotlib, SimPy (opcional)</li>
+                        <li><strong>2.4 Determinación de Réplicas:</strong> Método del estado estable</li>
+                        <li><strong>2.5 Métricas de Desempeño:</strong> Tiempos, utilización, longitud de cola</li>
+                        <li><strong>2.6 Análisis Estadístico:</strong> Intervalos de confianza, pruebas de hipótesis</li>
+                    </ul>
+                </div>
+
+                <div class="timeline-item">
+                    <h4>3. Resultados</h4>
+                    <ul>
+                        <li><strong>3.1 Determinación del Estado Estable:</strong> Gráficos y análisis</li>
+                        <li><strong>3.2 Estadísticas por Cajero:</strong> Punto 1</li>
+                        <li><strong>3.3 Análisis por Tipo de Usuario:</strong> Punto 2</li>
+                        <li><strong>3.4 Propuesta de Mejora:</strong> Punto 3</li>
+                        <li><strong>3.5 Verificación y Validación:</strong> Punto 4</li>
+                        <li><strong>3.6 Eliminación del Transitorio:</strong> Punto 5</li>
+                    </ul>
+                </div>
+
+                <div class="timeline-item">
+                    <h4>4. Conclusiones</h4>
+                    <ul>
+                        <li>Resumen de hallazgos principales</li>
+                        <li>Respuesta a la pregunta: ¿Son suficientes 3 cajeros?</li>
+                        <li>Recomendaciones para el centro comercial</li>
+                        <li>Limitaciones del estudio</li>
+                        <li>Trabajo futuro</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>💻 Implementación en Python</h3>
+            <div class="step-box">
+                <span class="step-number">1</span>
+                <strong>Configuración Inicial</strong>
+                <div class="code-example">
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import stats
+
+# Parámetros de usuarios
+usuarios = {
+    'rapido': {'servicio': 1, 'llegada': 3, 'prob': 0.25},
+    'normal': {'servicio': 3, 'llegada': 3, 'prob': 0.20},
+    'lento': {'servicio': 4, 'llegada': 5, 'prob': 0.275},
+    'muy_lento': {'servicio': 6, 'llegada': 7, 'prob': 0.275}
+}
+
+num_cajeros = 3
+tiempo_simulacion = 1000  # minutos
+                </div>
+            </div>
+
+            <div class="step-box">
+                <span class="step-number">2</span>
+                <strong>Simulación de Cola M/M/1</strong>
+                <div class="code-example">
+def simular_mm1(lambda_llegada, mu_servicio, tiempo_sim):
+    """
+    Simula un sistema M/M/1
+    lambda_llegada: tasa de llegadas (clientes/min)
+    mu_servicio: tasa de servicio (clientes/min)
+    tiempo_sim: tiempo total de simulación
+    """
+    tiempo_actual = 0
+    tiempo_proximo_llegada = np.random.exponential(1/lambda_llegada)
+    tiempo_proximo_salida = float('inf')
+
+    clientes_en_sistema = 0
+    tiempos_espera = []
+    tiempos_sistema = []
+
+    # ... (implementar lógica de eventos)
+
+    return tiempos_espera, tiempos_sistema
+                </div>
+            </div>
+
+            <div class="step-box">
+                <span class="step-number">3</span>
+                <strong>Determinación del Estado Estable</strong>
+                <div class="code-example">
+def determinar_estado_estable(datos, ventana=50):
+    """
+    Determina el punto donde el sistema alcanza estado estable
+    usando promedios móviles
+    """
+    promedios_moviles = []
+    for i in range(len(datos) - ventana):
+        promedio = np.mean(datos[i:i+ventana])
+        promedios_moviles.append(promedio)
+
+    # Detectar estabilización (varianza baja)
+    varianzas = []
+    for i in range(len(promedios_moviles) - ventana):
+        var = np.var(promedios_moviles[i:i+ventana])
+        varianzas.append(var)
+
+    # Punto de corte: donde varianza se estabiliza
+    punto_corte = np.argmin(varianzas) + ventana
+
+    return punto_corte, promedios_moviles
+                </div>
+            </div>
+
+            <div class="step-box">
+                <span class="step-number">4</span>
+                <strong>Visualización con Matplotlib</strong>
+                <div class="code-example">
+# Gráfico de estado estable
+plt.figure(figsize=(12, 6))
+plt.plot(datos, label='Datos originales', alpha=0.5)
+plt.plot(promedios_moviles, label='Promedio móvil', linewidth=2)
+plt.axvline(x=punto_corte, color='r', linestyle='--', 
+            label=f'Punto de corte: {punto_corte}')
+plt.xlabel('Tiempo (minutos)')
+plt.ylabel('Tiempo promedio en sistema')
+plt.title('Determinación del Estado Estable')
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.show()
+                </div>
+            </div>
+
+            <div class="step-box">
+                <span class="step-number">5</span>
+                <strong>Análisis Estadístico</strong>
+                <div class="code-example">
+# Calcular estadísticas por cajero
+for i, cajero in enumerate(cajeros):
+    datos_estable = cajero[punto_corte:]
+
+    media = np.mean(datos_estable)
+    std = np.std(datos_estable, ddof=1)
+    n = len(datos_estable)
+
+    # Intervalo de confianza 95%
+    t_critico = stats.t.ppf(0.975, n-1)
+    margen_error = t_critico * (std / np.sqrt(n))
+
+    ic_inferior = media - margen_error
+    ic_superior = media + margen_error
+
+    print(f"Cajero {i+1}:")
+    print(f"  Media: {media:.2f} min")
+    print(f"  IC 95%: [{ic_inferior:.2f}, {ic_superior:.2f}]")
+                </div>
+            </div>
+        </div>
+
+        <!-- Proceso de Verificación y Validación -->
+        <div class="section">
+            <h2>✅ Proceso de Verificación, Calibración y Validación</h2>
+
+            <h3>🔍 Definiciones</h3>
+            <div class="grid-container">
+                <div class="card">
+                    <div class="card-icon">🔧</div>
+                    <div class="card-title">Verificación</div>
+                    <div class="card-content">
+                        <p><strong>"¿Estamos construyendo el modelo correctamente?"</strong></p>
+                        <ul style="margin-top: 10px;">
+                            <li>Revisar código sin errores</li>
+                            <li>Probar casos extremos</li>
+                            <li>Validar lógica de eventos</li>
+                            <li>Verificar generación de números aleatorios</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">⚙️</div>
+                    <div class="card-title">Calibración</div>
+                    <div class="card-content">
+                        <p><strong>"¿Los parámetros son correctos?"</strong></p>
+                        <ul style="margin-top: 10px;">
+                            <li>Ajustar tasas λ y μ</li>
+                            <li>Verificar distribuciones</li>
+                            <li>Comparar con datos reales</li>
+                            <li>Optimizar parámetros</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">✅</div>
+                    <div class="card-title">Validación</div>
+                    <div class="card-content">
+                        <p><strong>"¿Estamos construyendo el modelo correcto?"</strong></p>
+                        <ul style="margin-top: 10px;">
+                            <li>Comparar con teoría M/M/1</li>
+                            <li>Validar con expertos</li>
+                            <li>Análisis de sensibilidad</li>
+                            <li>Pruebas estadísticas</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <h3>📊 Diagrama del Proceso V&V</h3>
+            <div class="visual-diagram">
+                <div style="display: flex; flex-direction: column; gap: 20px; align-items: center;">
+                    <div style="background: #3498db; color: white; padding: 20px 40px; border-radius: 10px; font-weight: bold; font-size: 1.2em;">
+                        INICIO: Definición del Problema
+                    </div>
+                    <div style="font-size: 2em;">↓</div>
+                    <div style="background: #9b59b6; color: white; padding: 20px 40px; border-radius: 10px; font-weight: bold; font-size: 1.2em;">
+                        Construcción del Modelo
+                    </div>
+                    <div style="font-size: 2em;">↓</div>
+                    <div style="background: #e74c3c; color: white; padding: 20px 40px; border-radius: 10px; font-weight: bold; font-size: 1.2em;">
+                        VERIFICACIÓN: ¿Código correcto?
+                    </div>
+                    <div style="display: flex; gap: 40px; align-items: center;">
+                        <div style="background: #27ae60; color: white; padding: 15px 30px; border-radius: 10px; font-weight: bold;">
+                            SÍ →
+                        </div>
+                        <div style="background: #e74c3c; color: white; padding: 15px 30px; border-radius: 10px; font-weight: bold;">
+                            NO → Corregir
+                        </div>
+                    </div>
+                    <div style="font-size: 2em;">↓</div>
+                    <div style="background: #f39c12; color: white; padding: 20px 40px; border-radius: 10px; font-weight: bold; font-size: 1.2em;">
+                        CALIBRACIÓN: Ajustar Parámetros
+                    </div>
+                    <div style="font-size: 2em;">↓</div>
+                    <div style="background: #16a085; color: white; padding: 20px 40px; border-radius: 10px; font-weight: bold; font-size: 1.2em;">
+                        VALIDACIÓN: ¿Modelo representa realidad?
+                    </div>
+                    <div style="display: flex; gap: 40px; align-items: center;">
+                        <div style="background: #27ae60; color: white; padding: 15px 30px; border-radius: 10px; font-weight: bold;">
+                            SÍ →
+                        </div>
+                        <div style="background: #e74c3c; color: white; padding: 15px 30px; border-radius: 10px; font-weight: bold;">
+                            NO → Revisar Modelo
+                        </div>
+                    </div>
+                    <div style="font-size: 2em;">↓</div>
+                    <div style="background: #27ae60; color: white; padding: 20px 40px; border-radius: 10px; font-weight: bold; font-size: 1.2em;">
+                        MODELO VALIDADO: Análisis y Resultados
+                    </div>
+                </div>
+            </div>
+
+            <h3>🧪 Pruebas de Validación Específicas</h3>
+            <div class="example-box">
+                <div class="example-title">Validación con Teoría M/M/1</div>
+                <div class="formula-box">
+# Comparar resultados de simulación con teoría
+
+# Para usuario rápido:
+lambda_teorico = 1/3
+mu_teorico = 1/1
+rho_teorico = lambda_teorico / mu_teorico
+
+# Valores teóricos
+W_teorico = 1 / (mu_teorico - lambda_teorico)
+Wq_teorico = rho_teorico / (mu_teorico - lambda_teorico)
+L_teorico = rho_teorico / (1 - rho_teorico)
+
+# Valores de simulación
+W_simulacion = np.mean(tiempos_sistema)
+Wq_simulacion = np.mean(tiempos_espera)
+
+# Prueba de hipótesis
+# H0: W_simulacion = W_teorico
+# H1: W_simulacion ≠ W_teorico
+
+t_stat, p_value = stats.ttest_1samp(tiempos_sistema, W_teorico)
+
+if p_value > 0.05:
+    print("✓ Modelo validado: No hay diferencia significativa")
+else:
+    print("✗ Modelo requiere ajuste")
+                </div>
+            </div>
+        </div>
+
+        <!-- Criterios de Decisión -->
+        <div class="section">
+            <h2>🎯 Criterios de Decisión Sugeridos</h2>
+
+            <div class="info-box">
+                <strong>💡 ¿Cómo decidir si 3 cajeros son suficientes?</strong>
+                <p style="margin-top: 10px; font-size: 1.1em;">
+                    Establece criterios cuantitativos basados en estándares de servicio al cliente:
+                </p>
+            </div>
+
+            <h3>📊 Criterios Propuestos</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Métrica</th>
+                        <th>Valor Aceptable</th>
+                        <th>Valor Crítico</th>
+                        <th>Acción si se Excede</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Tiempo promedio en cola (Wq)</strong></td>
+                        <td>< 3 minutos</td>
+                        <td>> 5 minutos</td>
+                        <td>Agregar cajero</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tiempo promedio en sistema (W)</strong></td>
+                        <td>< 5 minutos</td>
+                        <td>> 8 minutos</td>
+                        <td>Agregar cajero</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Utilización del cajero (ρ)</strong></td>
+                        <td>60% - 85%</td>
+                        <td>> 90%</td>
+                        <td>Agregar cajero</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Longitud promedio de cola (Lq)</strong></td>
+                        <td>< 3 clientes</td>
+                        <td>> 5 clientes</td>
+                        <td>Agregar cajero</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Probabilidad de espera > 5 min</strong></td>
+                        <td>< 10%</td>
+                        <td>> 20%</td>
+                        <td>Agregar cajero</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>💡 Estrategias Alternativas</h3>
+            <div class="grid-container">
+                <div class="ca
