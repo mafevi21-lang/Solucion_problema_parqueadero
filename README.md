@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Simulación Sistema de Parqueaderos — Centro Comercial Supercentro
 Laboratorio Final · Actividad Didáctica 2
 Modelo M/M/1 con 3 cajeros independientes
@@ -78,3 +79,6 @@ Observación importante
 El usuario Normal tiene ρ = 1.0, lo que en teoría genera colas infinitas.
 En la simulación esto se manifiesta con tiempos en sistema muy elevados (~63 min promedio).
 Este es el principal cuello de botella del sistema y la razón más urgente de mejora.
+=======
+# Solucion_problema_parqueadero
+>>>>>>> 86c34114c8f0a8ab13a8d6b3a0f20506d519318b
